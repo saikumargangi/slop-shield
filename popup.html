@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slop Shield</title>
+<style>
+  body {
+    width: 300px;
+    margin: 0;
+    font: 13px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #1c1e21;
+    background: #ffffff;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid #e6e8eb;
+  }
+  header b { font-size: 15px; }
+  header span { font-size: 11px; color: #8a8f98; }
+  main { padding: 10px 14px 6px; }
+  label.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    cursor: pointer;
+  }
+  label.row select { font: inherit; }
+  .stats {
+    margin: 8px 0 4px;
+    padding: 8px 10px;
+    background: #f5f6f7;
+    border-radius: 8px;
+    font-size: 12.5px;
+  }
+  section { margin-top: 10px; }
+  section h2 {
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7075;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 3px 0;
+    font-size: 12.5px;
+  }
+  li .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  li.empty { color: #8a8f98; }
+  button.rm {
+    flex: none;
+    border: 0;
+    background: none;
+    color: #b3261e;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 2px;
+  }
+  footer {
+    padding: 8px 14px;
+    border-top: 1px solid #e6e8eb;
+    font-size: 11px;
+    color: #8a8f98;
+  }
+</style>
+</head>
+<body>
+  <header><b>Slop Shield</b><span>AI-slop filter</span></header>
+  <main>
+    <label class="row"><span>Enabled</span><input type="checkbox" id="tEnabled"></label>
+    <label class="row"><span>YouTube</span><input type="checkbox" id="tYoutube"></label>
+    <label class="row"><span>Etsy (beta)</span><input type="checkbox" id="tEtsy"></label>
+    <label class="row"><span>Hide Shorts titled as made with AI</span><input type="checkbox" id="tShortsAi"></label>
+    <label class="row"><span>Strict keywords</span><input type="checkbox" id="tStrict"></label>
+    <label class="row">
+      <span>Mode</span>
+      <select id="mode">
+        <option value="hide">Hide</option>
+        <option value="blur">Blur</option>
+      </select>
+    </label>
+    <p class="stats">Hidden so far: <b id="hiddenTotal">0</b></p>
+    <section>
+      <h2>Blocked (manual)</h2>
+      <ul id="blockedList"></ul>
+    </section>
+    <section>
+      <h2>AI-labelled channels <small>(hidden at 2+ videos)</small></h2>
+      <ul id="learnedList"></ul>
+      <h2>Marked "Not AI"</h2>
+      <ul id="allowedList"></ul>
+    </section>
+  </main>
+  <footer>Slop Shield v0.3 · runs locally, nothing leaves your browser</footer>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+/* Slop Shield v0.1 — tile states and controls (injected on youtube.com and etsy.com) */
+
+.ss-host { position: relative !important; }
+
+/* mode "hide" */
+.ss-hidden { display: none !important; }
+
+/* mode "blur": children blurred and unclickable; our own buttons stay sharp */
+.ss-blur > *:not(.ss-show):not(.ss-block):not(.ss-notai) {
+  filter: blur(12px);
+  pointer-events: none !important;
+}
+
+/* shared button chrome */
+.ss-block,
+.ss-show,
+.ss-notai {
+  position: absolute;
+  z-index: 2147483000;
+  box-sizing: border-box;
+  margin: 0;
+  font: 500 11px/1.4 -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: #fff;
+  background: rgba(20, 20, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  padding: 3px 7px;
+  cursor: pointer;
+}
+
+/* hover "block this channel/shop" button (top-right of the tile) */
+.ss-block {
+  top: 6px;
+  right: 6px;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.ss-host:hover > .ss-block,
+.ss-block:focus-visible { opacity: 1; }
+
+/* blur-mode overlay button (centered) */
+.ss-show {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-size: 12px;
+  padding: 6px 12px;
+  background: rgba(20, 20, 20, 0.92);
+}
+
+/* hidden Shorts: remove the whole grid cell so the shelf reflows */
+.ytGridShelfViewModelGridShelfItem:has(.ss-hidden) { display: none !important; }
+
+/* blur-mode "Not AI" (below the Show button) */
+.ss-notai { top: calc(50% + 22px); left: 50%; transform: translateX(-50%); font-size: 11px; opacity: 0.85; }
