@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  const DEFAULT_SETTINGS = { enabled: true, youtube: true, etsy: true, mode: "hide", strict: false, shortsAi: true };
+  const DEFAULT_SETTINGS = { enabled: true, youtube: true, etsy: true, mode: "hide", strict: false, shortsAi: true, skipShorts: true };
   const VERDICT_CAP = 5000;  // max cached verdicts
   const VERDICT_DROP = 1000; // dropped (oldest first) when the cap is exceeded
 

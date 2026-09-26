@@ -127,6 +127,7 @@
         try { processTile(tile); } catch (e) {} // a DOM change must never throw
       }
       checkWatchPage();
+      checkShortsPlayer();
       syncShelves();
     } catch (e) {}
   }
@@ -223,6 +224,45 @@
     pump();
   }
 
+  // ---------- Shorts player: auto-skip Shorts YouTube labels "Made with AI" ----------
+  // The swipe feed has no tiles to hide, so we move to the next Short instead.
+  let lastShortId = null;
+  function checkShortsPlayer() {
+    const m = location.pathname.match(/^\/shorts\/([\w-]{11})/);
+    if (!m || !settings.enabled || !settings.youtube || !settings.skipShorts) return;
+    const id = m[1];
+    if (id === lastShortId) return;
+    lastShortId = id;
+    if (allowed[id]) return;
+    const act = (ai) => { if (ai && location.pathname.includes(id)) skipShort(id); };
+    if (verdicts[id]) return act(verdicts[id].ai);
+    if (!queue.some((j) => j.id === id)) queue.unshift({ tile: null, id, ch: null, onDone: act }); // jump the queue
+    pump();
+  }
+
+  function skipShort(id) {
+    const next = document.querySelector('#navigation-button-down button, button[aria-label="Next video"]');
+    if (next) next.click();
+    else document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", code: "ArrowDown", keyCode: 40, bubbles: true }));
+    toast("Skipped an AI Short (YouTube label: Made with AI)", id);
+  }
+
+  function toast(text, id) {
+    try {
+      document.querySelector(".ss-toast")?.remove();
+      const t = document.createElement("div");
+      t.className = "ss-toast";
+      t.textContent = text + " ";
+      const back = document.createElement("button");
+      back.type = "button";
+      back.textContent = "Not AI? Go back";
+      back.addEventListener("click", () => { SS.allow([id]); history.back(); t.remove(); });
+      t.appendChild(back);
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 6000);
+    } catch (e) {}
+  }
+
   function pump() {
     if (fetching || halted || !queue.length) return;
     if (checksThisLoad >= MAX_CHECKS_PER_LOAD) { queue = []; return; }
@@ -264,6 +304,7 @@
           SS.hideTile(job.tile, settings.mode, "YouTube label: Made with AI", ch && ch.key, job.id);
         scheduleScan(); // pick up sibling tiles from the same channel
       }
+      if (job.onDone) job.onDone(ai);
     } catch (e) {
       halted = true; // stop the queue for this page load
       queue = [];
@@ -334,6 +375,7 @@
       io = makeIO();
       scan();
       startObservers();
+      setInterval(() => { try { checkShortsPlayer(); } catch (e) {} }, 700);
     } catch (e) {}
   })();
 })();

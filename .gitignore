@@ -4,3 +4,4 @@ shots/
 hermes.log
 launch/
 tests/eval_results.json
+.profile/

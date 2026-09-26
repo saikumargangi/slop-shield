@@ -10,6 +10,7 @@ Hides AI slop on YouTube. It reads the **"Made with AI"** label that YouTube its
 | Videos YouTube labels "Made with AI" | on | The creator (or YouTube) disclosed it. Precision is high. |
 | Channels with 2+ different labelled videos | on | Catches the rest of a slop channel. **Never applies to verified channels.** |
 | Shorts titled as made with AI (`#ai`, "AI cat", "made with Sora") | on | Tuned so news and tutorials *about* AI stay visible |
+| **Shorts feed: auto-skip** Shorts YouTube labels "Made with AI" | on | The swipe player has no tiles to hide, so it jumps to the next Short (with a "Not AI? Go back" button) |
 | Channels you block (🚫 on hover) | on | Your call |
 | Strict title keywords | off | Also hits AI news and reviews |
 

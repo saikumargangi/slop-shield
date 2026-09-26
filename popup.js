@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const DEFAULTS = { enabled: true, youtube: true, etsy: true, mode: "hide", strict: false, shortsAi: true };
+  const DEFAULTS = { enabled: true, youtube: true, etsy: true, mode: "hide", strict: false, shortsAi: true, skipShorts: true };
 
   const $ = (id) => document.getElementById(id);
 
@@ -66,6 +66,7 @@
       $("tEtsy").checked = !!s.etsy;
       $("tStrict").checked = !!s.strict;
       $("tShortsAi").checked = !!s.shortsAi;
+      $("tSkipShorts").checked = !!s.skipShorts;
       $("mode").value = s.mode === "blur" ? "blur" : "hide";
       $("hiddenTotal").textContent = (o.stats && o.stats.hiddenTotal) || 0;
       renderList($("blockedList"), o.blocked || {}, false, "blocked");
@@ -86,6 +87,7 @@
     bindToggle("tEtsy", "etsy");
     bindToggle("tStrict", "strict");
     bindToggle("tShortsAi", "shortsAi");
+    bindToggle("tSkipShorts", "skipShorts");
     $("mode").addEventListener("change", (e) => {
       writeSettings({ mode: e.target.value === "blur" ? "blur" : "hide" }).catch(() => {});
     });
