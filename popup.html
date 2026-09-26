@@ -4,114 +4,316 @@
 <meta charset="utf-8">
 <title>Slop Shield</title>
 <style>
-  body {
-    width: 300px;
-    margin: 0;
-    font: 13px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    color: #1c1e21;
-    background: #ffffff;
+  * { box-sizing: border-box; }
+
+  :root {
+    --accent: #4f46e5;
+    --rose: #f43f5e;
+    --bg: #ffffff;
+    --bg-top: #eef2ff;
+    --card: #ffffff;
+    --border: #e6e8ee;
+    --ink: #1b1d22;
+    --muted: #667085;
+    --seg-bg: #eef0f5;
+    --track-off: #c9cfd9;
+    --count-bg: #eef0f5;
+    --scroll: #c9ced9;
+    --hero-a: #4338ca;
+    --hero-b: #4f46e5;
+    --hero-c: #6366f1;
+    --pill-on-bg: #e6f7ee;
+    --pill-on-ink: #15803d;
+    --pill-on-dot: #22c55e;
+    --pill-off-bg: #f0f2f5;
+    --pill-off-ink: #667085;
+    --pill-off-dot: #9aa2b1;
   }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1016;
+      --bg-top: #1a1e36;
+      --card: #171a22;
+      --border: #262c38;
+      --ink: #e8eaf0;
+      --muted: #97a0ae;
+      --seg-bg: #232834;
+      --track-off: #3b4250;
+      --count-bg: #232834;
+      --scroll: #39404d;
+      --hero-a: #312e81;
+      --hero-b: #4338ca;
+      --hero-c: #4f46e5;
+      --pill-on-bg: rgba(34, 197, 94, 0.14);
+      --pill-on-ink: #57cf8d;
+      --pill-on-dot: #22c55e;
+      --pill-off-bg: #222734;
+      --pill-off-ink: #97a0ae;
+      --pill-off-dot: #5c6575;
+    }
+  }
+
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 340px;
+    font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background-color: var(--bg);
+    background-image: linear-gradient(180deg, var(--bg-top) 0, var(--bg) 190px);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- header ---------- */
   header {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
     padding: 12px 14px 10px;
-    border-bottom: 1px solid #e6e8eb;
+    border-bottom: 1px solid var(--border);
   }
-  header b { font-size: 15px; }
-  header span { font-size: 11px; color: #8a8f98; }
-  main { padding: 10px 14px 6px; }
-  label.row {
+  header .logo { width: 28px; height: 28px; border-radius: 7px; flex: none; }
+  .brand { display: flex; flex-direction: column; line-height: 1.2; margin-right: auto; min-width: 0; }
+  .brand b { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .brand span { font-size: 10.5px; font-weight: 500; color: var(--muted); }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px; flex: none;
+    padding: 3px 10px 3px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+    background: var(--pill-off-bg); color: var(--pill-off-ink);
+  }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pill-off-dot); }
+  .pill.on { background: var(--pill-on-bg); color: var(--pill-on-ink); }
+  .pill.on .dot { background: var(--pill-on-dot); animation: ss-pulse 2.2s ease-out infinite; }
+  @keyframes ss-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45); }
+    70% { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+
+  main { padding: 12px 14px 2px; }
+
+  /* ---------- hero stat card ---------- */
+  .hero {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 6px 0;
-    cursor: pointer;
+    padding: 13px 6px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--hero-a) 0%, var(--hero-b) 55%, var(--hero-c) 100%);
+    box-shadow: 0 8px 20px -10px rgba(79, 70, 229, 0.55);
   }
-  label.row select { font: inherit; }
-  .stats {
-    margin: 8px 0 4px;
-    padding: 8px 10px;
-    background: #f5f6f7;
-    border-radius: 8px;
-    font-size: 12.5px;
+  .hero .stat { flex: 1; min-width: 0; padding: 0 10px 0 14px; }
+  .hero .stat b {
+    display: block;
+    font-size: 26px; font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.02em; color: #ffffff;
+    font-variant-numeric: tabular-nums;
   }
-  section { margin-top: 10px; }
-  section h2 {
-    margin: 0 0 4px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #6b7075;
+  .hero .stat span {
+    display: block; margin-top: 3px;
+    font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.78);
   }
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-height: 150px;
-    overflow-y: auto;
+  .hero .sep { width: 1px; align-self: stretch; background: rgba(255, 255, 255, 0.25); }
+  .ai-strike {
+    position: absolute; top: 11px; right: 12px;
+    padding: 3px 7px; border-radius: 8px;
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--rose);
+    font-size: 12px; font-weight: 800; letter-spacing: 0.02em;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
   }
-  li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 3px 0;
-    font-size: 12.5px;
+
+  /* ---------- settings card ---------- */
+  .card {
+    margin-top: 12px;
+    padding: 1px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
   }
-  li .name {
+  .row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; padding: 9px 0; cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  .card > .row + .row { border-top: 1px solid var(--border); }
+  .card.dimmed .row:not(:first-child) { opacity: 0.55; }
+  .mode-row { cursor: default; }
+  .lbl { font-size: 13px; font-weight: 500; min-width: 0; }
+  .lbl .hint { display: block; margin-top: 1px; font-size: 11px; font-weight: 400; color: var(--muted); }
+
+  .switch { position: relative; flex: none; width: 34px; height: 20px; }
+  .switch input {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    margin: 0; opacity: 0; cursor: pointer;
+  }
+  .switch input:focus-visible { outline: none; }
+  .switch .track {
+    position: relative; display: block; width: 34px; height: 20px;
+    border-radius: 999px; background: var(--track-off);
+    transition: background 0.18s ease; pointer-events: none;
+  }
+  .switch .thumb {
+    position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+    border-radius: 50%; background: #ffffff;
+    box-shadow: 0 1px 3px rgba(16, 24, 40, 0.3);
+    transition: transform 0.18s ease; pointer-events: none;
+  }
+  .switch input:checked + .track { background: var(--accent); }
+  .switch input:checked + .track .thumb { transform: translateX(14px); }
+  .switch input:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .segmented {
+    position: relative; display: flex; gap: 2px; flex: none;
+    padding: 3px; border-radius: 10px; background: var(--seg-bg);
+  }
+  .segmented label { position: relative; }
+  .segmented input {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    margin: 0; opacity: 0; cursor: pointer;
+  }
+  .segmented input:focus-visible { outline: none; }
+  .segmented input + span {
+    display: block; padding: 4px 13px; border-radius: 7px;
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    transition: background 0.15s ease, color 0.15s ease; pointer-events: none;
+  }
+  .segmented input:checked + span { background: var(--accent); color: #ffffff; }
+  .segmented input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .backing { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+  /* ---------- lists ---------- */
+  details.list {
+    margin-top: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
-  li.empty { color: #8a8f98; }
+  details.list summary {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 12px; cursor: pointer; list-style: none;
+    user-select: none; -webkit-user-select: none;
+  }
+  details.list summary::-webkit-details-marker { display: none; }
+  .s-label { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 600; }
+  .s-count {
+    flex: none; padding: 1px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    background: var(--count-bg); font-variant-numeric: tabular-nums;
+  }
+  .chev {
+    flex: none; width: 7px; height: 7px;
+    border: solid var(--muted); border-width: 0 2px 2px 0;
+    transform: rotate(45deg); transition: transform 0.18s ease;
+  }
+  details[open] > summary .chev { transform: rotate(-135deg); }
+  .list-hint { margin: 0; padding: 0 12px 6px; font-size: 11px; color: var(--muted); }
+  details.list ul {
+    list-style: none; margin: 0; padding: 0 12px 8px;
+    max-height: 150px; overflow-y: auto;
+  }
+  details.list li {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; padding: 6px 0; font-size: 12.5px;
+  }
+  details.list li + li { border-top: 1px solid var(--border); }
+  li .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  li.empty { color: var(--muted); }
   button.rm {
-    flex: none;
-    border: 0;
-    background: none;
-    color: #b3261e;
-    font-size: 15px;
-    line-height: 1;
-    cursor: pointer;
-    padding: 0 2px;
+    flex: none; border: 0; background: none;
+    color: var(--muted); font-size: 15px; line-height: 1;
+    padding: 2px 5px; margin-right: -5px; border-radius: 6px;
+    cursor: pointer; transition: color 0.15s ease, background 0.15s ease;
   }
+  button.rm:hover { color: var(--rose); background: rgba(244, 63, 94, 0.09); }
+
+  /* ---------- footer ---------- */
   footer {
-    padding: 8px 14px;
-    border-top: 1px solid #e6e8eb;
-    font-size: 11px;
-    color: #8a8f98;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; margin-top: 12px; padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--muted);
+  }
+  footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ---------- focus, scrollbars, motion ---------- */
+  summary:focus-visible, footer a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  ul::-webkit-scrollbar { width: 8px; }
+  ul::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 4px; }
+  ul::-webkit-scrollbar-track { background: transparent; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
 </head>
 <body>
-  <header><b>Slop Shield</b><span>AI-slop filter</span></header>
+  <header>
+    <img class="logo" src="icons/icon128.png" alt="" width="28" height="28">
+    <div class="brand"><b>Slop Shield</b><span>v1.0</span></div>
+    <span class="pill on" id="statusPill"><i class="dot"></i><span id="statusText">Protecting</span></span>
+  </header>
+
   <main>
-    <label class="row"><span>Enabled</span><input type="checkbox" id="tEnabled"></label>
-    <label class="row"><span>YouTube</span><input type="checkbox" id="tYoutube"></label>
-    <label class="row"><span>Hide Shorts titled as made with AI</span><input type="checkbox" id="tShortsAi"></label>
-    <label class="row"><span>Auto-skip AI Shorts in the Shorts feed</span><input type="checkbox" id="tSkipShorts"></label>
-    <label class="row"><span>Strict keywords</span><input type="checkbox" id="tStrict"></label>
-    <label class="row">
-      <span>Mode</span>
-      <select id="mode">
-        <option value="hide">Hide</option>
-        <option value="blur">Blur</option>
-      </select>
-    </label>
-    <p class="stats">Hidden so far: <b id="hiddenTotal">0</b></p>
-    <section>
-      <h2>Blocked (manual)</h2>
+    <section class="hero" aria-label="Stats">
+      <span class="ai-strike" aria-hidden="true">AI</span>
+      <div class="stat"><b id="hiddenTotal">0</b><span>AI videos hidden</span></div>
+      <div class="sep" aria-hidden="true"></div>
+      <div class="stat"><b id="learnedCount">0</b><span>AI channels found</span></div>
+    </section>
+
+    <section class="card" id="settingsCard">
+      <label class="row">
+        <span class="lbl">Enabled</span>
+        <span class="switch"><input type="checkbox" id="tEnabled"><span class="track"><span class="thumb"></span></span></span>
+      </label>
+      <label class="row">
+        <span class="lbl">Hide Shorts titled as made with AI</span>
+        <span class="switch"><input type="checkbox" id="tShortsAi"><span class="track"><span class="thumb"></span></span></span>
+      </label>
+      <label class="row">
+        <span class="lbl">Auto-skip AI Shorts in the Shorts feed</span>
+        <span class="switch"><input type="checkbox" id="tSkipShorts"><span class="track"><span class="thumb"></span></span></span>
+      </label>
+      <label class="row">
+        <span class="lbl">Strict keywords<span class="hint">Also hides AI news &amp; reviews</span></span>
+        <span class="switch"><input type="checkbox" id="tStrict"><span class="track"><span class="thumb"></span></span></span>
+      </label>
+      <div class="row mode-row">
+        <span class="lbl">Mode</span>
+        <span class="segmented">
+          <label><input type="radio" name="ssMode" id="modeHide" value="hide"><span>Hide</span></label>
+          <label><input type="radio" name="ssMode" id="modeBlur" value="blur"><span>Blur</span></label>
+        </span>
+        <select id="mode" class="backing" tabindex="-1" aria-hidden="true">
+          <option value="hide" selected>Hide</option>
+          <option value="blur">Blur</option>
+        </select>
+      </div>
+    </section>
+
+    <details class="list" open>
+      <summary><span class="s-label">Blocked channels</span><span class="s-count" id="blockedCount">0</span><i class="chev" aria-hidden="true"></i></summary>
       <ul id="blockedList"></ul>
-    </section>
-    <section>
-      <h2>AI-labelled channels <small>(hidden at 2+ videos)</small></h2>
+    </details>
+    <details class="list" open>
+      <summary><span class="s-label">AI channels learned</span><span class="s-count" id="learnedListCount">0</span><i class="chev" aria-hidden="true"></i></summary>
+      <p class="list-hint">Hidden automatically after 2+ AI-labelled videos from a channel.</p>
       <ul id="learnedList"></ul>
-      <h2>Marked "Not AI"</h2>
+    </details>
+    <details class="list">
+      <summary><span class="s-label">Marked "Not AI"</span><span class="s-count" id="allowedCount">0</span><i class="chev" aria-hidden="true"></i></summary>
       <ul id="allowedList"></ul>
-    </section>
+    </details>
   </main>
-  <footer>Slop Shield v0.4 · runs locally, nothing leaves your browser</footer>
+
+  <footer>
+    <span>Runs locally · nothing leaves your browser</span>
+    <a href="https://github.com/saikumargangi/slop-shield/issues" target="_blank" rel="noopener">Report a miss</a>
+  </footer>
+
   <script src="popup.js"></script>
 </body>
 </html>

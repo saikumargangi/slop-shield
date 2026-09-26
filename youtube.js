@@ -240,11 +240,18 @@
     pump();
   }
 
-  function skipShort(id) {
+  // The verdict may be cached, so this can run before YouTube's player exists.
+  // Keep trying until the URL actually leaves this Short (max ~5s).
+  function skipShort(id, tries = 0) {
+    if (!location.pathname.includes(id)) {
+      toast("Skipped an AI Short (YouTube label: Made with AI)", id);
+      return;
+    }
+    if (tries > 16) return;
     const next = document.querySelector('#navigation-button-down button, button[aria-label="Next video"]');
     if (next) next.click();
     else document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", code: "ArrowDown", keyCode: 40, bubbles: true }));
-    toast("Skipped an AI Short (YouTube label: Made with AI)", id);
+    setTimeout(() => skipShort(id, tries + 1), 300);
   }
 
   function toast(text, id) {

@@ -5,3 +5,5 @@ hermes.log
 launch/
 tests/eval_results.json
 .profile/
+store/*.zip
+hermes_*.log

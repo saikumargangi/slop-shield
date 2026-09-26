@@ -10,17 +10,28 @@ with sync_playwright() as p:
     page = ctx.pages[0]
     page.goto("https://www.youtube.com/results?search_query=funny+animals"); page.wait_for_timeout(5000)
     real = page.evaluate("""() => [...document.querySelectorAll('a[href^="/shorts/"]')].map(a => a.getAttribute('href'))[0]""")
-    page.goto("https://www.youtube.com/shorts/" + AI_SHORT)
+    page.goto("https://www.youtube.com/shorts/" + AI_SHORT, wait_until="commit")
     moved, toast = False, None
     for _ in range(20):
         page.wait_for_timeout(500)
         toast = toast or page.evaluate("document.querySelector('.ss-toast')?.textContent || null")
         if AI_SHORT not in page.url: moved = True; break
-    page.wait_for_timeout(800)
+    for _ in range(8):  # the notice appears once the URL has moved on
+        toast = toast or page.evaluate("document.querySelector('.ss-toast')?.textContent || null")
+        if toast: break
+        page.wait_for_timeout(250)
     page.screenshot(path=os.path.join(EXT, "shots/real/shorts_skip.png"))
     print("AI short -> moved:", moved, "| now:", page.url[-20:], "| toast:", toast)
     if not moved: fails.append("AI-labelled Short was not skipped")
     if not toast: fails.append("no skip notice shown")
+    # Second visit: verdict is now CACHED, so the skip fires before the player loads (regression for that bug)
+    page.goto("https://www.youtube.com/shorts/" + AI_SHORT, wait_until="commit")
+    moved2 = False
+    for _ in range(20):
+        page.wait_for_timeout(500)
+        if AI_SHORT not in page.url: moved2 = True; break
+    print("AI short (cached verdict) -> moved:", moved2)
+    if not moved2: fails.append("cached-verdict AI Short was not skipped")
     page.goto("https://www.youtube.com" + real); page.wait_for_timeout(9000)
     stayed = real in page.url
     print("real short", real, "-> stayed:", stayed)

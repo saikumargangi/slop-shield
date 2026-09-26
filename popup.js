@@ -1,8 +1,8 @@
-// Slop Shield v0.1 — popup: toggles, mode, stats, blocked/learned lists.
+// Slop Shield v1.0 — popup: toggles, mode, stats, blocked/learned lists.
 (function () {
   "use strict";
 
-  const DEFAULTS = { enabled: true, youtube: true, mode: "hide", strict: false, shortsAi: true, skipShorts: true };
+  const DEFAULTS = { enabled: true, mode: "hide", strict: false, shortsAi: true, skipShorts: true };
 
   const $ = (id) => document.getElementById(id);
 
@@ -16,12 +16,22 @@
     await chrome.storage.local.set({ settings: { ...s, ...patch } });
   }
 
+  function setStatus(enabled) {
+    const pill = $("statusPill");
+    if (!pill) return;
+    pill.classList.toggle("on", enabled);
+    $("statusText").textContent = enabled ? "Protecting" : "Paused";
+    const card = $("settingsCard");
+    if (card) card.classList.toggle("dimmed", !enabled);
+  }
+
   function removeBtn(store, key) {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "rm";
     b.textContent = "\u00D7";
     b.title = "Remove";
+    b.setAttribute("aria-label", "Remove " + (key || ""));
     b.addEventListener("click", async () => {
       try {
         const o = await chrome.storage.local.get(store);
@@ -42,7 +52,7 @@
       li.className = "empty";
       li.textContent = "None yet";
       ul.appendChild(li);
-      return;
+      return 0;
     }
     for (const key of keys) {
       const rec = map[key] || {};
@@ -55,6 +65,7 @@
       li.appendChild(removeBtn(store, key));
       ul.appendChild(li);
     }
+    return keys.length;
   }
 
   async function load() {
@@ -62,31 +73,47 @@
       const o = await chrome.storage.local.get(["settings", "stats", "blocked", "learned", "allowed"]);
       const s = { ...DEFAULTS, ...(o.settings || {}) };
       $("tEnabled").checked = !!s.enabled;
-      $("tYoutube").checked = !!s.youtube;
       $("tStrict").checked = !!s.strict;
       $("tShortsAi").checked = !!s.shortsAi;
       $("tSkipShorts").checked = !!s.skipShorts;
       $("mode").value = s.mode === "blur" ? "blur" : "hide";
+      $("modeHide").checked = s.mode !== "blur";
+      $("modeBlur").checked = s.mode === "blur";
       $("hiddenTotal").textContent = (o.stats && o.stats.hiddenTotal) || 0;
-      renderList($("blockedList"), o.blocked || {}, false, "blocked");
-      renderList($("learnedList"), o.learned || {}, true, "learned");
-      renderList($("allowedList"), o.allowed || {}, false, "allowed");
+      setStatus(!!s.enabled);
+      const learnedMap = o.learned || {};
+      const setCount = (id, n) => { const el = $(id); if (el) el.textContent = n; };
+      setCount("learnedCount", Object.keys(learnedMap).length);
+      setCount("blockedCount", renderList($("blockedList"), o.blocked || {}, false, "blocked"));
+      setCount("learnedListCount", renderList($("learnedList"), learnedMap, true, "learned"));
+      setCount("allowedCount", renderList($("allowedList"), o.allowed || {}, false, "allowed"));
     } catch (e) {}
   }
 
   function bindToggle(id, key) {
     $(id).addEventListener("change", (e) => {
+      if (id === "tEnabled") setStatus(e.target.checked);
       writeSettings({ [key]: e.target.checked }).catch(() => {});
     });
   }
 
   document.addEventListener("DOMContentLoaded", () => {
     bindToggle("tEnabled", "enabled");
-    bindToggle("tYoutube", "youtube");
     bindToggle("tStrict", "strict");
     bindToggle("tShortsAi", "shortsAi");
     bindToggle("tSkipShorts", "skipShorts");
-    $("mode").addEventListener("change", (e) => {
+    // Segmented control: radio input sets the hidden backing select; the select
+    // (which the storage save code listens to) fires a programmatic change.
+    const mode = $("mode");
+    for (const radio of [$("modeHide"), $("modeBlur")]) {
+      radio.addEventListener("change", () => {
+        if (radio.checked && mode.value !== radio.value) {
+          mode.value = radio.value;
+          mode.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      });
+    }
+    mode.addEventListener("change", (e) => {
       writeSettings({ mode: e.target.value === "blur" ? "blur" : "hide" }).catch(() => {});
     });
     load();
