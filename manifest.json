@@ -1,14 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Slop Shield",
-  "version": "0.4.0",
-  "description": "Hides YouTube videos labelled 'Made with AI', AI-titled Shorts, and channels you block. Etsy beta. Runs locally.",
+  "version": "1.0.0",
+  "description": "Hide YouTube videos labelled 'Made with AI', skip AI Shorts, block slop channels. Runs locally, no data collected.",
   "permissions": [
     "storage"
   ],
   "host_permissions": [
-    "https://www.youtube.com/*",
-    "https://www.etsy.com/*"
+    "https://www.youtube.com/*"
   ],
   "content_scripts": [
     {
@@ -19,18 +18,6 @@
         "detect.js",
         "common.js",
         "youtube.js"
-      ],
-      "css": [
-        "styles.css"
-      ]
-    },
-    {
-      "matches": [
-        "https://www.etsy.com/*"
-      ],
-      "js": [
-        "common.js",
-        "etsy.js"
       ],
       "css": [
         "styles.css"

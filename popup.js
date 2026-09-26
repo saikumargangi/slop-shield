@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const DEFAULTS = { enabled: true, youtube: true, etsy: true, mode: "hide", strict: false, shortsAi: true, skipShorts: true };
+  const DEFAULTS = { enabled: true, youtube: true, mode: "hide", strict: false, shortsAi: true, skipShorts: true };
 
   const $ = (id) => document.getElementById(id);
 
@@ -63,7 +63,6 @@
       const s = { ...DEFAULTS, ...(o.settings || {}) };
       $("tEnabled").checked = !!s.enabled;
       $("tYoutube").checked = !!s.youtube;
-      $("tEtsy").checked = !!s.etsy;
       $("tStrict").checked = !!s.strict;
       $("tShortsAi").checked = !!s.shortsAi;
       $("tSkipShorts").checked = !!s.skipShorts;
@@ -84,7 +83,6 @@
   document.addEventListener("DOMContentLoaded", () => {
     bindToggle("tEnabled", "enabled");
     bindToggle("tYoutube", "youtube");
-    bindToggle("tEtsy", "etsy");
     bindToggle("tStrict", "strict");
     bindToggle("tShortsAi", "shortsAi");
     bindToggle("tSkipShorts", "skipShorts");

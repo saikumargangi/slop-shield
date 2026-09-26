@@ -12,7 +12,7 @@ Slop Shield runs entirely in your browser. It has no server, no account, no anal
 
 **What leaves your device:** nothing is sent to us or to any third party. To read YouTube's own "Made with AI" label, the extension requests the public YouTube watch page for videos on your screen, directly from your browser to youtube.com, exactly as if you had opened them. Those requests go only to youtube.com. No browsing data is collected, sold or shared.
 
-**Permissions:** `storage` holds the data above. Access to `youtube.com` and `etsy.com` lets it hide items on those sites.
+**Permissions:** `storage` holds the data above. Access to `youtube.com` lets it hide videos there.
 
 **Removing your data:** uninstalling the extension deletes everything it stored.
 

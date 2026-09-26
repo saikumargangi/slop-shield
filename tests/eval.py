@@ -48,7 +48,7 @@ def main():
         pop = ctx.new_page()
         pop.goto(f"chrome-extension://{ext_id(EXT)}/popup.html")
         # blur mode so hidden tiles keep their title for the record
-        pop.evaluate("() => chrome.storage.local.set({settings: {enabled: true, youtube: true, etsy: true, mode: 'blur', strict: false, shortsAi: true}})")
+        pop.evaluate("() => chrome.storage.local.set({settings: {enabled: true, youtube: true, mode: 'blur', strict: false, shortsAi: true}})")
         page = ctx.new_page()
         for kind, qs in (("normal", NORMAL), ("ai", AI)):
             for q in qs:

@@ -1,3 +1,5 @@
+> Original v0.1 build spec. Etsy support was removed in 1.0 (no reliable AI signal on Etsy).
+
 # Slop Shield v1: Chrome extension (Manifest V3)
 
 Hides AI-generated "slop" on YouTube (main) and Etsy (beta). No backend, no analytics,

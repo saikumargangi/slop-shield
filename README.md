@@ -19,7 +19,6 @@ Every hidden video says **why** (in blur mode), and one click on **Not AI** un-h
 ## Honest limits
 - Most AI slop is **not labelled**. This is a floor, not a detector. In our tests, AI-heavy searches had 59% of results hidden, and normal searches 1.7% (all creator-disclosed AI).
 - There's no pixel-based "AI detector". Research shows they fail on real-world content, and false accusations hurt real creators.
-- Etsy support is beta (keyword rules only).
 
 ## How the label check can't be spoofed
 The label isn't in feed data, so for videos you actually look at (1s on screen) Slop Shield fetches the public watch page. It trusts only YouTube's own structured `howThisWasMadeSectionViewModel` object and its link to the AI-disclosure help article. This works in any UI language and ignores auto-dubbing. Creator-written text (titles, descriptions) can't trigger it; see `tests/test_detect.js`. Page checks are capped at 200/day and stop if YouTube shows a bot check.

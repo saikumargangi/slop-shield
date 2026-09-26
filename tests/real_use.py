@@ -54,10 +54,7 @@ def main():
         page.keyboard.press("ArrowDown"); page.wait_for_timeout(4000)
         step("yt_shorts_next", page, yt)
 
-        # Etsy: headed browser, may pass the bot wall that blocked headless
-        for q in ["ai art print", "crochet bunny", "wall art"]:
-            page.goto("https://www.etsy.com/search?q=" + q.replace(" ", "+")); page.wait_for_timeout(7000)
-            step("etsy_" + q.replace(" ", "_"), page, "[data-listing-id]")
+        # No Etsy: automated visits got this network restricted on 2026-09-26 (and a real shop runs from it).
 
         pop = ctx.new_page(); pop.goto(f"chrome-extension://{ext_id(EXT)}/popup.html"); pop.wait_for_timeout(800)
         pop.screenshot(path=os.path.join(SHOTS, "popup.png"))
