@@ -23,7 +23,10 @@ Every hidden video says **why** (in blur mode), and one click on **Not AI** un-h
 ## How the label check can't be spoofed
 The label isn't in feed data, so for videos you actually look at (1s on screen) Slop Shield fetches the public watch page. It trusts only YouTube's own structured `howThisWasMadeSectionViewModel` object and its link to the AI-disclosure help article. This works in any UI language and ignores auto-dubbing. Creator-written text (titles, descriptions) can't trigger it; see `tests/test_detect.js`. Page checks are capped at 200/day and stop if YouTube shows a bot check.
 
-## Install (developer mode, until the Chrome Web Store listing is live)
+## Install
+Install from the Chrome Web Store: https://chromewebstore.google.com/detail/hkffnnjfkeobfcakhmblbmgffphinoec
+
+Or load it in developer mode:
 1. Download this repo (Code → Download ZIP) and unzip it.
 2. Open `chrome://extensions` and turn on **Developer mode**.
 3. Click **Load unpacked** and choose the folder.
